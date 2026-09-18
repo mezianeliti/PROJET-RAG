@@ -2,7 +2,7 @@
 
 from clean_text import CHEMIN_PDF, extraire_texte, nettoyer
 
-TAILLE_CHUNK = 400        # taille visée, en caractères
+TAILLE_CHUNK = 150        # taille visée, en caractères
 LIGNES_REPRISES = 2       # lignes du chunk précédent recopiées au début du suivant
 
 
