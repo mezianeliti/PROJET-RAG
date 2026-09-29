@@ -58,7 +58,24 @@ def chercher(question, chunks, vecteurs, modele, top=TOP):
 
     resultats.sort(key=lambda r: r[0], reverse=True)
     return resultats[:top]
+def ajouter_suivants(resultats, chunks):
+    """Ajoute, après chaque chunk trouvé, le chunk qui le suit dans le document.
 
+    Une info coupée à la fin d'un chunk (une liste, un tableau) continue
+    souvent dans le suivant, même s'il ne ressemble pas à la question.
+    """
+    deja_pris = {numero for _, numero, _ in resultats}
+    complets = []
+
+    for score, numero, chunk in resultats:
+        complets.append((score, numero, chunk))
+
+        suivant = numero + 1
+        if suivant <= len(chunks) and suivant not in deja_pris:
+            complets.append((score, suivant, chunks[suivant - 1]))
+            deja_pris.add(suivant)
+
+    return complets
 
 def afficher(question, resultats):
     """Affiche proprement le résultat d'une recherche."""

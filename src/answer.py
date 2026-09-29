@@ -12,7 +12,7 @@ from pathlib import Path
 from openai import OpenAI 
 
 from embed import charger_modele
-from search import chercher, preparer
+from search import ajouter_suivants, chercher, preparer
 
 MODELE_IA = "gpt-5.6-luna" 
 
@@ -93,7 +93,7 @@ if __name__ == "__main__":
 
     for question in questions:
         resultats = chercher(question, chunks, vecteurs, modele)
-
+        resultats = ajouter_suivants(resultats, chunks)
         print("=" * 70)
         print(f"QUESTION : {question}")
         print("=" * 70)
