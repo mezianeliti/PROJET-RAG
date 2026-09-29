@@ -9,12 +9,12 @@ import os
 import sys
 from pathlib import Path
 
-import anthropic
+from openai import OpenAI 
 
 from embed import charger_modele
 from search import chercher, preparer
 
-MODELE_IA = "claude-opus-5"
+MODELE_IA = "gpt-5.6-luna" 
 
 # La consigne donnée à l'IA. C'est elle qui l'empêche d'inventer.
 CONSIGNE = """Tu réponds à des questions sur des documents de gestion immobilière.
@@ -64,25 +64,23 @@ def construire_prompt(question, resultats):
 
 def repondre(client, question, resultats):
     """Envoie les extraits + la question à l'IA et renvoie sa réponse."""
-    reponse = client.messages.create(
+    reponse = client.responses.create(
         model=MODELE_IA,
-        max_tokens=1000,
-        system=CONSIGNE,
-        messages=[{"role": "user", "content": construire_prompt(question, resultats)}],
+        instructions=CONSIGNE,
+        input=construire_prompt(question, resultats),
     )
-    return "".join(bloc.text for bloc in reponse.content if bloc.type == "text")
-
+    return reponse.output_text
 
 if __name__ == "__main__":
     charger_env()
 
-    if not os.environ.get("ANTHROPIC_API_KEY"):
+    if not os.environ.get("OPENAI_API_KEY"):
         print("❌ Aucune clé d'API trouvée.")
         print("   Crée un fichier .env à la racine du projet, contenant :")
-        print("   ANTHROPIC_API_KEY=sk-ant-ta-cle-ici")
+        print("   OPENAI_API_KEY=sk-ta-cle-ici")
         sys.exit(1)
 
-    client = anthropic.Anthropic()
+    client = OpenAI()
 
     print("Chargement du modèle d'embeddings…")
     modele = charger_modele()
