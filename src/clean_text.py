@@ -2,7 +2,7 @@
 
 from pypdf import PdfReader
 
-CHEMIN_PDF = "documents/situation-holding-azazga-2026-08-v1.pdf"
+CHEMIN_PDF = "documents/test.pdf"
 
 
 def extraire_texte(chemin):
